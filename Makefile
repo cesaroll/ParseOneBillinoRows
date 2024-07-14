@@ -8,4 +8,5 @@ build:
 	dotnet build -c Release
 
 read:
-	time ~/dotnet/ParseOneBillionRows/FileReader/bin/Release/net8.0/FileReader
+	time ./FileReader/bin/Release/net8.0/FileReader
+	echo ""

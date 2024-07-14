@@ -13,7 +13,7 @@ public class Progressindicator : IProgressindicator
     private int _emojiIndex;
     private int _count;
     private int _cursorPosition;
-    
+
     public void ReportProgressForOneStation(WeatherStation station)
     {
         Console.WriteLine($"{station.Name} Mean temperature: {station.Mean:F2}");
@@ -21,25 +21,27 @@ public class Progressindicator : IProgressindicator
 
     public void ReportProgress()
     {
-        if (_count++ == 0)
+        if (_count++ == 0) {
             Console.WriteLine("\n Progress:\n");
-        
+            _cursorPosition = Console.CursorLeft;
+        }
+
         if (_count % 10_000_000 != 0)
             return;
-        
-        _cursorPosition = Console.CursorLeft;
-        Console.Write($" Progress: {_count:N0} {GetEmoji()}");
+
         Console.SetCursorPosition(_cursorPosition, Console.CursorTop);
+        Console.Write($" {_count:N0} {GetEmoji()}");
+
     }
-    
+
     string GetEmoji()
     {
         if (_emojiIndex >= emojis.Length)
             _emojiIndex = 0;
-    
+
         return emojis[_emojiIndex++];
     }
-    
+
     private string[] emojis = new string[]
     {
         "\U0001F600", // Smiley face emoji
