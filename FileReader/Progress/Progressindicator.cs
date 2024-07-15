@@ -5,13 +5,14 @@ namespace FileReader.Progress;
 public interface IProgressindicator
 {
     void ReportProgressForOneStation(WeatherStation station);
+    void InitProgress();
     void ReportProgress();
 }
 
 public class Progressindicator : IProgressindicator
 {
     private int _emojiIndex;
-    private int _count;
+    private volatile int _count;
     private int _cursorPosition;
 
     public void ReportProgressForOneStation(WeatherStation station)
@@ -19,19 +20,21 @@ public class Progressindicator : IProgressindicator
         Console.WriteLine($"{station.Name} Mean temperature: {station.Mean:F2}");
     }
 
+    public void InitProgress()
+    {
+        Console.WriteLine("\nProgress:\n");
+        _cursorPosition = Console.CursorLeft;
+    }
+
     public void ReportProgress()
     {
-        if (_count++ == 0) {
-            Console.WriteLine("\n Progress:\n");
-            _cursorPosition = Console.CursorLeft;
-        }
+        _count++;
 
         if (_count % 10_000_000 != 0)
             return;
 
         Console.SetCursorPosition(_cursorPosition, Console.CursorTop);
-        Console.Write($" {_count:N0} {GetEmoji()}");
-
+        Console.Write($"Count: {_count:N0} {GetEmoji()}");
     }
 
     string GetEmoji()

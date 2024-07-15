@@ -10,7 +10,10 @@ public class FileReader
     private readonly IWeatherReaderService _weatherReaderService;
     private readonly IProgressindicator _progressindicator;
 
-    public FileReader(string path, IWeatherReaderService weatherReaderService, IProgressindicator progressindicator)
+    public FileReader(
+        string path,
+        IWeatherReaderService weatherReaderService,
+        IProgressindicator progressindicator)
     {
         _path = path;
         _weatherReaderService = weatherReaderService;
@@ -19,22 +22,21 @@ public class FileReader
 
     public void Read()
     {
-        using StreamReader reader = new StreamReader(_path);
-        string? line;
-        while ((line = reader.ReadLine()) != null)
+        // _progressindicator.InitProgress();
+
+        Parallel.ForEach(File.ReadLines(_path), line =>
         {
             var (stationName, temperature) = GetMeasurement(line);
-            var station = _weatherReaderService.AddMeasurement(stationName, temperature);
-        }
-        
+            _weatherReaderService.AddMeasurement(stationName, temperature);
+        });
     }
-    
+
     private static (string StationName, float Temperature) GetMeasurement(string line)
     {
         var parts = line.Split(';');
         return (
-            parts[0], 
-            float.Parse(parts[1], CultureInfo.InvariantCulture) 
+            parts[0],
+            float.Parse(parts[1], CultureInfo.InvariantCulture)
         );
     }
 }

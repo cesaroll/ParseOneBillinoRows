@@ -9,4 +9,3 @@ build:
 
 read:
 	time ./FileReader/bin/Release/net8.0/FileReader
-	echo ""
